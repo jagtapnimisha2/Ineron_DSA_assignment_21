@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        class TreeNode {
+  constructor(value) {
+    this.value = value;
+    this.left = null;
+    this.right = null;
+  }
+}
+
+class BinaryTree {
+  constructor() {
+    this.root = null;
+  }
+  insert(value) {
+    const newNode = new TreeNode(value);
+
+    if (!this.root) {
+      this.root = newNode;
+    } else {
+      let queue = [this.root];
+
+      while (queue.length > 0) {
+        const currentNode = queue.shift();
+
+        if (!currentNode.left) {
+          currentNode.left = newNode;
+          break;
+        } else if (!currentNode.right) {
+          currentNode.right = newNode;
+          break;
+        } else {
+          queue.push(currentNode.left);
+          queue.push(currentNode.right);
+        }
+      }
+    }
+  }
+  convertToBinarySearchTree() {
+    const values = [];
+    this._inorderTraversal(this.root, values);
+
+    // Sort the values
+    values.sort((a, b) => a - b);
+
+    this.root = this._buildBST(values, 0, values.length - 1);
+  }
+
+  _inorderTraversal(node, values) {
+    if (node) {
+      this._inorderTraversal(node.left, values);
+      values.push(node.value);
+      this._inorderTraversal(node.right, values);
+    }
+  }
+
+  _buildBST(values, start, end) {
+    if (start > end) {
+      return null;
+    }
+
+    const mid = Math.floor((start + end) / 2);
+    const node = new TreeNode(values[mid]);
+
+    node.left = this._buildBST(values, start, mid - 1);
+    node.right = this._buildBST(values, mid + 1, end);
+
+    return node;
+  }
+  inorderTraversal(node) {
+    if (node) {
+      this.inorderTraversal(node.left);
+      console.log(node.value);
+      this.inorderTraversal(node.right);
+    }
+  }
+}
+const binaryTree = new BinaryTree();
+binaryTree.insert(10);
+binaryTree.insert(2);
+binaryTree.insert(7);
+binaryTree.insert(8);
+binaryTree.insert(4);
+
+console.log("Binary Tree:");
+binaryTree.inorderTraversal(binaryTree.root);
+binaryTree.convertToBinarySearchTree();
+
+console.log("Binary Search Tree:");
+binaryTree.inorderTraversal(binaryTree.root);
+
+    </script>
+</body>
+</html>
